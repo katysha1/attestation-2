@@ -1,8 +1,7 @@
-# from datetime import datetime
-# import datetime
+import datetime
 # from typing import List, Optional
 # import heapq
-# import time
+#import time
 # from typing import List, Optional
 # import heapq
 # from datetime import time
@@ -10,95 +9,119 @@
 # from collections import deque
 # from queue import PriorityQueue
 # import threading
-#
-# from datetime import datetime
-# import datetime
-# from typing import List, Optional
-# import heapq
-# import time
-# from typing import List, Optional
-# import heapq
-# from datetime import time
-# import json
-# from collections import deque
-# from queue import PriorityQueue
+
 
 import asyncio
 import uuid
 from datetime import datetime
 
-class Tasks: #класс с задачами
+class Tasks: #класс с задачами, паттерн Команда
     def __init__(self, name: str, *args,**kwargs):
         self.name = name
         self.date = datetime.now()
         self.id = str(uuid.uuid4())
         self.status = "pending"
         self.result = None
-async def execute(self, task):
-    try:
-        self.status = "running"
-        self.result = await self.action(*self.args, **self.kwargs)
-        self.status = "completed"
-        return self.result
-    except Exception as e:
-        self.status = "failed"
-        print(f"Ошибка при выполнении задачи {self.name}: {e}")
-        raise
 
-def __repr__(self):
-    return (f"Task(id={self.id}, name={self.name}, "
-            f"status={self.status}")
+    async def execute(self, task):
+        try:
+            self.status = "running"
+            self.result = await self.action(*self.args, **self.kwargs)
+            self.status = "completed"
+            return self.result
+        except print(f"Ошибка при выполнении задачи {self.name}")
 
-class Manager:
+
+    def __repr__(self):
+        return f"\n Задание:{self.id + 1}: {self.name, self.date}"
+
+class Manager: #паттерн Одиночка
     _instance = None
 
     def __new__(cls, *args, **kwargs):
         cls._instance = []
         return cls._instance
 
-    def add_task(self, task: Tasks):#добавление новой задачи
+    def add_task(self, task: Tasks): # добавление новой задачи
+
         self.tasks.append(task)
-        return task.id
+        new_task = input("Введите задачу: ")
+        new_id = uuid.uuid4()
+        new_date = datetime.now()
+        new_task.append()
+        print(f"{new_date} - Задача '{new_task}' добавлена в список с ID: {new_id}")
 
-    def search(self): #linear search by id
+
+    def search(self, id): #linear search by id
+        for task in Tasks:
+            if id == id_number: #!!! id_number присвоить имя в запросе
+                return id
+        return None
+
+    def sort_task(self, date): #sorting by choosing
+       for i in range(Tasks):
+           min_idx = i
+           for j in range(i + 1, len(Tasks)):
+                   if Tasks[j] < Tasks[min_idx]:
+                       min_idx = j
+               Tasks[i], Tasks[min_idx] = Tasks[min_idx], Tasks[i]
+           return Tasks
+    search_result = sort_task(Tasks)
+
+    print(search_result)
+    for i in search_result:
+        print(f"{i}")
+
+
+
+    def delete_task(self, id): #delete task by id
+        self.tasks = [datetime for datetime in self.tasks if id_number != id]
+        print(f" Задача {id_number} удалена.")
         pass
 
-    def add_task(self): #add new task
-        pass
 
-    def delete_task(self): #delete task by id
-        pass
+    def view_task(self, task): #view the list of tasks
+        if not task():
+            print("Список задач пуст.")
+        else:
+            print(f"ID: {task['id']}, Задача: {task['task']}, Дата и время: {task['date_time']}")
 
-    def sort_task(self): #sorting by choosing
-        pass
 
-    def bubble_sort(self): #sorting by datetime
-        pass
 
-    def view_task(self): #view the list of tasks
-        pass
+async def main():
+    tasks = Tasks()
+    await asyncio.gather(*tasks)
 
-# async def execute_tasks(self, max_concurrent: int = 3) -> List[Task]: #async task doing
+# asyncio.run(main())
+# print(f"Tasks are done. Amount :{}")
+
+if __name__ == "__main__":
+#     orders = Orders()  # Создание начального списка заказов
+#     manager = DeliveryManager(orders)
+#     st = Stack()
+#     pq = DequeQueue()
+#     # d = Delivery()
 #
-#     while self.tasks:
-#             # Берем до max_concurrent задач
-#         current_tasks = self.tasks[:max_concurrent]
-#         self.tasks = self.tasks[max_concurrent:]
+    while True:
+        print("\n Меню управления задачами:")
+        print("1. Список задач по времени добавления")
+#         print("2. Сортировать по номеру")
+#         print("3. Сортировать по весу груза")
+#         print("4. Сортировать по времени доставки")
+#         print("5. Найти доставку по номеру")
+#         print("6. Найти заказ по времени доставки")
+#         print("7. Добавить доставку")
+#         print("8. Удалить доставку")
+#         print("9. Изменить доставку")
+#         print("10. Отправка заказов \n(PS. Данный пункт работает частично, \nпонимаю как работает очередь и стек, \nно реализовать в коде до конца не смогла.\n 5 месяцев не хватило на более глубокое изучение)")
+#         print("11. Сохранить заказы в файл.")
+#         print("12. Выйти")
 #
-#             # Параллельное выполнение
-#         results = await asyncio.gather(
-#             *[task.execute() for task in current_tasks],
-#             return_exceptions=True
-#         )
+#         choice = input("Введите номер команды: ")
 #
-#             # Обработка результатов
-#         for task, result in zip(current_tasks, results):
-#             if isinstance(result, Exception):
-#                 print(f"Задача {task.name} завершилась с ошибкой: {result}")
-#             else:
-#                 self.completed_tasks.append(task)
-#
-#     return self.completed_tasks
+#         if choice == "1":
+#             print("\nСписок всех заказов:")
+#             manager.print_orders()
 
 
 
@@ -192,54 +215,42 @@ class Manager:
 #         print("Неверное действие. Попробуйте еще раз.")
 #--------------------collab end-----
 
-#--------from aatestation 1----
-    # def remove_delivery(self, number: int):  # Удаляет поставку по номеру.
-    #     self.deliveries = [d for d in self.deliveries if d.number != number]
-    #     print(f" Доставка {number} удалена.")
-#---------from attestetion1 end-----
 
-#---------linear search from aatestation 1----
-    # def linear_search(self, number: int) -> Optional[Delivery]:  # Линейный поиск доставки по номеру.
-    #     for delivery in self.deliveries:
-    #         if delivery.number == number:
-    #             return delivery
-    #     return None
-#-------end linear search-----
 
 #----- start process---
-if __name__ == "__main__":
-    orders = Orders()  # Создание начального списка заказов
-    manager = DeliveryManager(orders)
-    st = Stack()
-    pq = DequeQueue()
-    # d = Delivery()
-
-    while True:
-        print("\n Меню управления поставками:")
-        print("1. Список заказов на доставку")
-        print("2. Сортировать по номеру")
-        print("3. Сортировать по весу груза")
-        print("4. Сортировать по времени доставки")
-        print("5. Найти доставку по номеру")
-        print("6. Найти заказ по времени доставки")
-        print("7. Добавить доставку")
-        print("8. Удалить доставку")
-        print("9. Изменить доставку")
-        print("10. Отправка заказов \n(PS. Данный пункт работает частично, \nпонимаю как работает очередь и стек, \nно реализовать в коде до конца не смогла.\n 5 месяцев не хватило на более глубокое изучение)")
-        print("11. Сохранить заказы в файл.")
-        print("12. Выйти")
-
-        choice = input("Введите номер команды: ")
-
-        if choice == "1":
-            print("\nСписок всех заказов:")
-            manager.print_orders()
-
-        elif choice == "2":
-            sorted_delivery = manager.heap_sort(manager.deliveries, key_func=lambda delivery: delivery.number)
-            print("\nСписок заказов отсортированных по номеру:")
-            for delivery in sorted_delivery:
-                print(delivery)
+# if __name__ == "__main__":
+#     orders = Orders()  # Создание начального списка заказов
+#     manager = DeliveryManager(orders)
+#     st = Stack()
+#     pq = DequeQueue()
+#     # d = Delivery()
+#
+#     while True:
+#         print("\n Меню управления поставками:")
+#         print("1. Список заказов на доставку")
+#         print("2. Сортировать по номеру")
+#         print("3. Сортировать по весу груза")
+#         print("4. Сортировать по времени доставки")
+#         print("5. Найти доставку по номеру")
+#         print("6. Найти заказ по времени доставки")
+#         print("7. Добавить доставку")
+#         print("8. Удалить доставку")
+#         print("9. Изменить доставку")
+#         print("10. Отправка заказов \n(PS. Данный пункт работает частично, \nпонимаю как работает очередь и стек, \nно реализовать в коде до конца не смогла.\n 5 месяцев не хватило на более глубокое изучение)")
+#         print("11. Сохранить заказы в файл.")
+#         print("12. Выйти")
+#
+#         choice = input("Введите номер команды: ")
+#
+#         if choice == "1":
+#             print("\nСписок всех заказов:")
+#             manager.print_orders()
+#
+#         elif choice == "2":
+#             sorted_delivery = manager.heap_sort(manager.deliveries, key_func=lambda delivery: delivery.number)
+#             print("\nСписок заказов отсортированных по номеру:")
+#             for delivery in sorted_delivery:
+#                 print(delivery)
 
 
 #----end start process---
