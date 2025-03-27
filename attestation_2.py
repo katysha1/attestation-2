@@ -1,7 +1,7 @@
 import datetime
 # from typing import List, Optional
 # import heapq
-#import time
+# import time
 # from typing import List, Optional
 # import heapq
 # from datetime import time
@@ -15,8 +15,9 @@ import asyncio
 import uuid
 from datetime import datetime
 
-class Tasks: #класс с задачами, паттерн Команда
-    def __init__(self, name: str, *args,**kwargs):
+
+class Tasks:  # класс с задачами, паттерн Команда
+    def __init__(self, name: str, *args, **kwargs):
         self.name = name
         self.date = datetime.now()
         self.id = str(uuid.uuid4())
@@ -29,20 +30,21 @@ class Tasks: #класс с задачами, паттерн Команда
             self.result = await self.action(*self.args, **self.kwargs)
             self.status = "completed"
             return self.result
-        except print(f"Ошибка при выполнении задачи {self.name}")
-
+        except:
+            print(f"Ошибка при выполнении задачи {self.name}")
 
     def __repr__(self):
         return f"\n Задание:{self.id + 1}: {self.name, self.date}"
 
-class Manager: #паттерн Одиночка
+
+class Manager:  # паттерн Одиночка
     _instance = None
 
     def __new__(cls, *args, **kwargs):
         cls._instance = []
         return cls._instance
 
-    def add_task(self, task: Tasks): # добавление новой задачи
+    def add_task(self, task: Tasks):  # добавление новой задачи
 
         self.tasks.append(task)
         new_task = input("Введите задачу: ")
@@ -51,83 +53,106 @@ class Manager: #паттерн Одиночка
         new_task.append()
         print(f"{new_date} - Задача '{new_task}' добавлена в список с ID: {new_id}")
 
-
-    def search(self, id): #linear search by id
+    def search(self, id):  # линейный поиск по id
+        id_number = input("Введите ID задачи для поиска: ")
         for task in Tasks:
-            if id == id_number: #!!! id_number присвоить имя в запросе
+            if id == id_number:  # !!! id_number присвоить имя в запросе
                 return id
         return None
 
-    def sort_task(self, date): #sorting by choosing
-       for i in range(Tasks):
-           min_idx = i
-           for j in range(i + 1, len(Tasks)):
-                   if Tasks[j] < Tasks[min_idx]:
-                       min_idx = j
-               Tasks[i], Tasks[min_idx] = Tasks[min_idx], Tasks[i]
-           return Tasks
-    search_result = sort_task(Tasks)
+    # def sort_task(self, task = Tasks(date)): #сортировка выбором
+    #   for i in range(len(task)):
+    #       min_idx = i
+    #       for j in range(i + 1, len(task)):
+    #         if task[j] < task[min_idx]:
+    #             min_idx = j
+    #       task[i], task[min_idx] = task[min_idx], task[i]
 
-    print(search_result)
-    for i in search_result:
-        print(f"{i}")
+    #   return task
+    # search_result = sort_task(self, task)
 
+    # print("\nСписок задач отсортированных по ID:")
+    # for i in search_result:
+    #     print(f"{i}")
 
+    def bubble_sort_task(Tasks):  # пузырьковая сортировка
+        n = len(Tasks)
+        for i in range(n):
+            swapped = False
+            for j in range(0, n - i - 1):
+                if Tasks[j] > Tasks[j + 1]:
+                    Tasks[j], Tasks[j + 1] = Tasks[j + 1], Tasks[j]
+                    swapped = True
+            if not swapped:
+                break
+        return Tasks
+        print("\nСписок задач отсортированных по ID:")
 
-    def delete_task(self, id): #delete task by id
-        self.tasks = [datetime for datetime in self.tasks if id_number != id]
-        print(f" Задача {id_number} удалена.")
+    def delete_task(self, id):  # удалить задачу по id
+        id_del = input("Введите ID задачи: ")
+        self.tasks = [datetime for datetime in self.tasks if id != id_del]
+        print(f" Задача {id_del} удалена.")
         pass
 
-
-    def view_task(self, task): #view the list of tasks
+    def view_task(self, task):  # показать список задач
         if not task():
             print("Список задач пуст.")
         else:
             print(f"ID: {task['id']}, Задача: {task['task']}, Дата и время: {task['date_time']}")
 
+    def task_start():  # Запуск выполнения всех задач
+        pass
 
 
 async def main():
     tasks = Tasks()
     await asyncio.gather(*tasks)
 
+
 # asyncio.run(main())
 # print(f"Tasks are done. Amount :{}")
 
 if __name__ == "__main__":
-#     orders = Orders()  # Создание начального списка заказов
-#     manager = DeliveryManager(orders)
-#     st = Stack()
-#     pq = DequeQueue()
-#     # d = Delivery()
-#
+
+    # task_list = Tasks()
+    manager = Manager()
+
     while True:
         print("\n Меню управления задачами:")
-        print("1. Список задач по времени добавления")
-#         print("2. Сортировать по номеру")
-#         print("3. Сортировать по весу груза")
-#         print("4. Сортировать по времени доставки")
-#         print("5. Найти доставку по номеру")
-#         print("6. Найти заказ по времени доставки")
-#         print("7. Добавить доставку")
-#         print("8. Удалить доставку")
-#         print("9. Изменить доставку")
-#         print("10. Отправка заказов \n(PS. Данный пункт работает частично, \nпонимаю как работает очередь и стек, \nно реализовать в коде до конца не смогла.\n 5 месяцев не хватило на более глубокое изучение)")
-#         print("11. Сохранить заказы в файл.")
-#         print("12. Выйти")
-#
-#         choice = input("Введите номер команды: ")
-#
-#         if choice == "1":
-#             print("\nСписок всех заказов:")
-#             manager.print_orders()
+        print("1. Список задач по времени создания (метод сортировки - выбором)")
+        print("2. Поиск задачи по ID (метод сортировки - линейный)")
+        print("3. Добавить задачу")
+        print("4. Удалить задачу")
+        print("5. Запуск выполнения всех задач")
+        print("6. Выход")
 
+        choice = input("Введите номер действия: ")
 
+        if choice == "1":
+            print("\nСписок всех задач:")
+            list = manager.view_task()
 
+        elif choice == "2":
+            sorted_tasks = manager.bubble_sort_task(manager.task, key_func=lambda task: task.id)
+            result = manager.bubble_sort_task(id)
+            print(result if result else "Задача не найдена.")
 
+        elif choice == "3":
+            add_new_task = manager.add_task()
 
-#----- lesson asyncio----
+        elif choice == "4":
+            delete_task = manager.delete_task()
+
+        elif choice == "5":
+            start_tasks = manager.task_start()
+
+        elif choice == "6":
+            print("До свидания!")
+            break
+        else:
+            print(" Неверный ввод. Попробуйте снова.")
+
+# ----- lesson asyncio----
 # Асинхронная загрузка веб страниц
 # async def fetch(session: aiohttp.ClientSession, url: str, semaphore: asyncio.Semaphore) -> Optional[str]:
 #     try:
@@ -136,8 +161,8 @@ if __name__ == "__main__":
 #                 return await response.text()
 #     except:
 #         print(f"Ошибка при загрузке {url}")
-#------lesson asyncio end -----
-#-------lesson patterns -----
+# ------lesson asyncio end -----
+# -------lesson patterns -----
 # главная функция
 # async def main():
 #     semaphore = asyncio.Semaphore(3)
@@ -149,129 +174,8 @@ if __name__ == "__main__":
 #
 # asyncio.run(main())
 
-# class Singleton:
-#     """
-#     Обычный класс с реализацией Singleton через атрибут класса.
-#     """
-#     _instance = None
-#
-#     def __new__(cls, *args, **kwargs):
-#         """
-#         Метод __new__ контролирует создание нового экземпляра.
-#         Если объект уже существует, возвращает существующий.
-#         """
-#         if cls._instance is None:
-#             cls._instance = super(Singleton, cls).__new__(cls)
-#         return cls._instance
-#
-#     def __init__(self, value):
-#         self.value = value
-#
-# # Пример использования:
-# singleton1 = Singleton(42)
-# singleton2 = Singleton(100)
-#
-# print(singleton1 is singleton2)  # Выведет: True
-# print(singleton2.value)          # Выведет: 42, так как singleton2 ссылается на тот же объект
 
-#------lesson patterns end-----
-
-
-#-------------------------collab
-# import uuid
-# from datetime import datetime
-# from dateutil import tz
-#
-# tasks = []
-#
-# def add_task():
-#     task = input("Введите задачу: ")
-#     task_id = uuid.uuid4()
-#     now = datetime.now(tz=tz.tzlocal())
-#     current_date_time = now.strftime("%Y-%m-%d %H:%M:%S %Z")
-#     tasks.append({
-#         "id": task_id,
-#         "task": task,
-#         "date_time": current_date_time
-#     })
-#     print(f"Задача '{task}' добавлена в список с ID: {task_id} и временем: {current_date_time}")
-#
-# def view_tasks():
-#     if not tasks:
-#         print("Список задач пуст.")
-#     else:
-#         for task in tasks:
-#             print(f"ID: {task['id']}, Задача: {task['task']}, Дата и время: {task['date_time']}")
-#
-# while True:
-#     action = input("Выберите действие (add/view/exit): ")
-#     if action == "add":
-#         add_task()
-#     elif action == "view":
-#         view_tasks()
-#     elif action == "exit":
-#         break
-#     else:
-#         print("Неверное действие. Попробуйте еще раз.")
-#--------------------collab end-----
-
-
-
-#----- start process---
-# if __name__ == "__main__":
-#     orders = Orders()  # Создание начального списка заказов
-#     manager = DeliveryManager(orders)
-#     st = Stack()
-#     pq = DequeQueue()
-#     # d = Delivery()
-#
-#     while True:
-#         print("\n Меню управления поставками:")
-#         print("1. Список заказов на доставку")
-#         print("2. Сортировать по номеру")
-#         print("3. Сортировать по весу груза")
-#         print("4. Сортировать по времени доставки")
-#         print("5. Найти доставку по номеру")
-#         print("6. Найти заказ по времени доставки")
-#         print("7. Добавить доставку")
-#         print("8. Удалить доставку")
-#         print("9. Изменить доставку")
-#         print("10. Отправка заказов \n(PS. Данный пункт работает частично, \nпонимаю как работает очередь и стек, \nно реализовать в коде до конца не смогла.\n 5 месяцев не хватило на более глубокое изучение)")
-#         print("11. Сохранить заказы в файл.")
-#         print("12. Выйти")
-#
-#         choice = input("Введите номер команды: ")
-#
-#         if choice == "1":
-#             print("\nСписок всех заказов:")
-#             manager.print_orders()
-#
-#         elif choice == "2":
-#             sorted_delivery = manager.heap_sort(manager.deliveries, key_func=lambda delivery: delivery.number)
-#             print("\nСписок заказов отсортированных по номеру:")
-#             for delivery in sorted_delivery:
-#                 print(delivery)
-
-
-#----end start process---
-
-#----sorting -----
-# # сортировка выбором
-# def selection_sort(arr):
-#     for i in range(len(arr)):
-#         min_idx = i
-#         for j in range(i + 1, len(arr)):
-#             if arr[j] < arr[min_idx]:
-#                 min_idx = j
-#         arr[i], arr[min_idx] = arr[min_idx], arr[i]
-#     return arr
-#
-#
-# result = selection_sort([29, 10, 14, 37, 13])
-# print(result)
-#---- end sorting----
-
-#-----asyncio---
+# -----asyncio---
 # import asyncio
 #
 # counter = 0
@@ -307,4 +211,4 @@ if __name__ == "__main__":
 #
 # asyncio.run(main())
 # print(f"Номера в обоих отелях забронировали на сумму: {counter}")
-#----end asyncio----
+# ----end asyncio----
