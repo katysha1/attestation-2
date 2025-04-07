@@ -207,3 +207,70 @@ if __name__ == "__main__":
             break
         else:
             print(" Неверный ввод. Попробуйте снова.")
+# -------
+
+# class TaskManager:
+#     _instance = None  # Singleton
+#
+#     def __new__(cls):
+#         if cls._instance is None:
+#             cls._instance = super().__new__(cls)
+#             cls._instance.tasks = []
+#         return cls._instance
+#
+#     def add_task(self, command_func):
+#         self.tasks.append(command_func)
+#
+#     def execute_all(self):
+#         for task in self.tasks:
+#             task()  # Вызов команды как функции
+#         self.tasks.clear()
+#
+# # Использование
+# manager = TaskManager()
+#
+# # Добавляем команды как обычные функции
+# manager.add_task(lambda: print("Задача 1 выполнена"))
+# manager.add_task(lambda: print("Задача 2 выполнена"))
+#
+# manager.execute_all()
+#-----
+# from abc import ABC, abstractmethod
+#
+# class Command(ABC):  # Абстрактный класс команды
+#     @abstractmethod
+#     def execute(self):
+#         pass
+#
+# class TaskManager:
+#     _instance = None  # Singleton
+#
+#     def __new__(cls):
+#         if cls._instance is None:
+#             cls._instance = super().__new__(cls)
+#             cls._instance.commands = []
+#         return cls._instance
+#
+#     def add_command(self, command: Command):
+#         self.commands.append(command)
+#
+#     def execute_all(self):
+#         for cmd in self.commands:
+#             cmd.execute()
+#         self.commands.clear()
+#
+# # Конкретная команда
+# class PrintCommand(Command):
+#     def __init__(self, message):
+#         self.message = message
+#
+#     def execute(self):
+#         print(self.message)
+#
+# # Использование
+# manager = TaskManager()
+# manager.add_command(PrintCommand("Задача 1"))
+# manager.add_command(PrintCommand("Задача 2"))
+#
+# manager.execute_all()
+# ------
