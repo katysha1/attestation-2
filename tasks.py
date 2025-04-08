@@ -1,7 +1,4 @@
-from sqlalchemy import (
-    Column, Integer, String, Text, ForeignKey, DECIMAL, TIMESTAMP, CheckConstraint, create_engine, DateTime
-)
-from sqlalchemy.orm import relationship, Session
+
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 import warnings
@@ -9,8 +6,6 @@ from sqlalchemy.schema import CreateTable
 
 warnings.filterwarnings("ignore")
 Base = declarative_base()
-
-from idlelib.window import register_callback
 
 import psycopg2
 
