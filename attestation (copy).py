@@ -7,163 +7,191 @@ import random
 from uuid import uuid4
 
 
-# class Command(ABC):  # Абстрактный класс команды
-#     def __init__(self, description):
-#         self.id = str(uuid4())
-#         self.description = description
-#         self.time = datetime.now()
-#
-#     def __str__(self):
-#         return f"Задача номер (ID={self.id}: '{self.description}', создана {self.time})"
-#
-#     @abstractmethod
-#     def execute(self):
-#         pass
-#
-#
-# class TaskManager:
-#     _instance = None
-#
-#     def __new__(cls):
-#         if cls._instance is None:
-#             cls._instance = super().__new__(cls)
-#             cls._instance.queue = []
-#
-#         return cls._instance
-#
-#     def add_task(self, task):
-#         self.queue.append(task)
-#         print(f'Задача {task.description} добавлена в очередь. Всего задач: {len(self.queue)}')
-#
-#     def bubble_sort(self, time):  # пузырьковая сортировка by adding time
-#
-#         n = len(time)
-#         for i in range(n):
-#             swapped = False
-#             for j in range(0, n - i - 1):
-#                 if time[j] > time[j + 1]:
-#                     time[j], time[j + 1] = time[j + 1], time[j]
-#                     swapped = True
-#             if not swapped:
-#                 break
-#         return time
-#         print("\nСписок задач отсортированных по времени:")
-#
-#     def linear_search(self, target):  # Линейный поиск id.
-#         target = input(int("Введите ID задачи для поиска: "))
-#         for task in Command:
-#             if self.target == target:
-#                 return target
-#         return None
-#
-#     def delete_task(self, id):
-#
-#         for d in Command if id != target else print("Задача не найдена"):
-#             return Command.id.pop()
-#             print(f" Задача {id} удалена.")
-#
-#     def print_task_list(self, task=None):
-#         if task:
-#             print(f"{task}")
-#         else:
-#             for i, task in enumerate(self.queue, 1):
-#                 print(f"{i}. {task}")
-#
-#     def execute_all(self):
-#         pass
-#         # for i in self.queue:
-#         #     i.execute()
-#         # self.queue.clear()
-#
-#     # async def execute_all(self):
-#     #     for cmd in self.commands:
-#     #         await asyncio.sleep(2
-#     #         cmd.execute()
-#     #     self.commands.clear()
-#
-#
-# # Конкретные классы команд
-# class PrintList(Command):
-#     def __init__(self, description):
-#         super().__init__(description)
-#         self.description = description
-#
-#     def execute(self):
-#         TaskManager().print_task_list(self)
-#
-#
-# class AddTask(Command):
-#     def __init__(self, *tasks):
-#         self.tasks = tasks
-#
-#     def execute(self):
-#         for task in self.tasks:
-#             TaskManager().add_task()
-#
-#
-# class BubbleSort(Command):  # класс для пузырьковой сортировки
-#     def __init__(self, time):
-#         self.time = time
-#
-#     def execute(self):
-#         TaskManager().bubble_sort()
-#
-#
-# class LinearSearch(Command):
-#     def __init__(self, id):
-#         self.id = id
-#
-#     def execute(self):
-#         TaskManager().linear_search()
-#
-#
-# class DeleteTask(Command):
-#     def __init__(self, id):
-#         self.id = id
-#
-#     def execute(self):
-#         TaskManager().delete_task()
-#
-#
-# # Использование
-# manager = TaskManager()
-#
+class Command(ABC):  # Абстрактный класс команды
+    def __init__(self, description):
+        self.id = str(uuid4())
+        self.description = description
+        self.time = datetime.now()
+
+    def __str__(self):
+        return f"Задача номер (ID={self.id}: '{self.description}', создана {self.time})"
+
+    @abstractmethod
+    def execute(self):
+        pass
+
+
+class TaskManager:
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.queue = []
+
+        return cls._instance
+
+    def add_task(self, task):
+        self.queue.append(task)
+        print(f'Задача {task.description} добавлена в очередь. Всего задач: {len(self.queue)}')
+
+    def bubble_sort(self, id):  # пузырьковая сортировка by id
+
+        n = len(id)
+        for i in range(n):
+            swapped = False
+            for j in range(0, n - i - 1):
+                if id[j] > id[j + 1]:
+                    id[j], id[j + 1] = id[j + 1], id[j]
+                    swapped = True
+            if not swapped:
+                break
+        return id
+        print("\nСписок задач отсортированных по времени:")
+
+    def linear_search(self, target):  # Линейный поиск id.
+        print("Поиск задачи по id:")
+        for task in self.queue:
+            if task.id == target:
+                print(f"Задача '{target}' найдена: {task}")
+                return task
+        print(f"Задача '{target}' не найдена.")
+        return None
+
+    def delete_task(self, id):
+        # id_del = input("Введите id задачи для удаления")
+        if not len(self.queue) == 0:
+            return self.queue.pop()
+        raise IndexError("Задачи отсутствуют")
+
+
+    def print_task_list(self, task=None):
+        if task:
+            print(f"{task}")
+        else:
+            for i, task in enumerate(self.queue, 1):
+                print(f"{i}. {task}")
+
+    def execute_all(self):
+        pass
+        # for i in self.queue:
+        #     i.execute()
+        # self.queue.clear()
+
+    def save_tasks(self, filename="tasks.txt"):
+        with open(filename, "w") as f:
+            for task in self.queue:
+                f.write(f"{task.id},{task.description},{task.time}\n")
+        print(f"Задачи сохранены в файл: {filename}")
+
+    def load_tasks(self, filename="tasks.txt"):
+        self.queue = []
+        with open(filename, "r") as f:
+            for line in f:
+                id, description, time_str = line.strip().split(",")
+                time = datetime.fromisoformat(time_str)
+                task = PrintList(description)
+                task.id = id
+                task.time = time
+                self.queue.append(task)
+        print(f"Задачи загружены из файла: {filename}")
+
+    # async def execute_all(self):
+    #     for cmd in self.commands:
+    #         await asyncio.sleep(2
+    #         cmd.execute()
+    #     self.commands.clear()
+
+
+# Конкретные классы команд
+class PrintList(Command):
+    def __init__(self, id):
+        super().__init__(id)
+        self.id = id
+
+    def execute(self):
+        TaskManager().print_task_list(self)
+
+
+class AddTask(Command):
+    def __init__(self, *tasks):
+        self.tasks = tasks
+
+    def execute(self):
+        for task in self.tasks:
+            TaskManager().add_task()
+
+
+class BubbleSort(Command):  # класс для пузырьковой сортировки
+    def __init__(self, id):
+        self.id = id
+
+    def execute(self):
+        TaskManager().bubble_sort()
+
+
+class LinearSearch(Command):
+    def __init__(self, id):
+        self.id = id
+
+    def execute(self):
+        TaskManager().linear_search()
+
+
+class DeleteTask(Command):
+    def __init__(self, id):
+        self.id = id
+
+    def execute(self):
+        TaskManager().delete_task()
+
+
+# Использование
+manager = TaskManager()
+# Загрузка списка задач
 # manager.add_task(PrintList("Скачивание файла"))
 # manager.add_task(PrintList("Обработка данных"))
 # manager.add_task(PrintList("Резервное копирование"))
 # manager.add_task(PrintList("Синхронизация"))
-# # manager.add_task(PrintList("Анализ логов"))
-# # manager.add_task(PrintList("Экспорт данных"))
-# # manager.add_task(PrintList("Импорт данных"))
-# # manager.add_task(PrintList("Очистка кеша"))
-# # manager.add_task(PrintList("Обновление системы"))
-# # manager.add_task(PrintList("Мониторинг ресурсов"))
-#
-# manager.execute_all()
-#
-# # Печать списка задач
-# print("\nСписок задач:")
-# manager.print_task_list()
-#
 # manager.add_task(PrintList("Анализ логов"))
 # manager.add_task(PrintList("Экспорт данных"))
 # manager.add_task(PrintList("Импорт данных"))
 # manager.add_task(PrintList("Очистка кеша"))
 # manager.add_task(PrintList("Обновление системы"))
 # manager.add_task(PrintList("Мониторинг ресурсов"))
+#
 # manager.execute_all()
+#
+# # Печать списка задач
 # print("\nСписок задач:")
 # manager.print_task_list()
-#
+# manager.save_tasks()
+
 # # Поиск задачи по ID
-# manager.linear_search("40b52d0e-3611-4042-aaae-0e24103b3155")
+# manager.load_tasks()
+# manager.linear_search("20fe5400-d922-4713-9504-3d1346efd996")
+
+# # Печать списка задач
+manager.load_tasks()
+print("\nСписок задач:")
+manager.print_task_list()
 
 # Удаление задачи по ID
+# manager.load_tasks()
+# manager.linear_search("cab5e0e2-66dc-4ffc-acbe-52df2c3249bc") #поиск задачи по id для удаления
+# manager.delete_task("cab5e0e2-66dc-4ffc-acbe-52df2c3249bc") #удаление задачи по найденному id
+# print("Задача удалена")
+# print("\nСписок задач:")
+# manager.print_task_list()
 
+# Сортировка задач по дате добавления
+task_ids = [task.id for task in manager.queue]
+sorted_task = manager.bubble_sort(task_ids)
+sorted_tasks = sorted(manager.queue, key=lambda task: sorted_task.index(task.id))
 
-#Сортировка задач по дате добавления
-
-#
+print("\nОтсортированный список ID задач:")
+for task in sorted_tasks:
+    print(f"ID: {task.id}, Задача: {task.description} дата: {task.time}")
 #_____
 
 # Использование асинхронное
