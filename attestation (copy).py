@@ -14,7 +14,7 @@ class Command(ABC):  # Абстрактный класс команды
         self.time = datetime.now()
 
     def __str__(self):
-        return f"Задача номер (ID={self.id}: '{self.description}', создана {self.time})"
+        return f"Задача номер (ID={self.id}: '{self.description}', от {self.time})"
 
     @abstractmethod
     def execute(self):
@@ -64,7 +64,6 @@ class TaskManager:
             return self.queue.pop()
         raise IndexError("Задачи отсутствуют")
 
-
     def print_task_list(self, task=None):
         if task:
             print(f"{task}")
@@ -72,11 +71,17 @@ class TaskManager:
             for i, task in enumerate(self.queue, 1):
                 print(f"{i}. {task}")
 
-    def execute_all(self):
-        pass
-        # for i in self.queue:
-        #     i.execute()
-        # self.queue.clear()
+    # def execute_all(self):
+    #     pass
+
+    async def execute_all(self):
+        async def execute_task(task):
+            await asyncio.sleep(5)
+            task.execute()
+            print(f"\nЗавершено:")
+
+        tasks = [asyncio.create_task(execute_task(task)) for task in self.queue]
+        await asyncio.gather(*tasks)
 
     def save_tasks(self, filename="tasks.txt"):
         with open(filename, "w") as f:
@@ -95,12 +100,6 @@ class TaskManager:
                 task.time = time
                 self.queue.append(task)
         print(f"Задачи загружены из файла: {filename}")
-
-    # async def execute_all(self):
-    #     for cmd in self.commands:
-    #         await asyncio.sleep(2
-    #         cmd.execute()
-    #     self.commands.clear()
 
 
 # Конкретные классы команд
@@ -146,8 +145,18 @@ class DeleteTask(Command):
         TaskManager().delete_task()
 
 
-# Использование
+# ПРИМЕНЕНИЕ
 manager = TaskManager()
+manager.load_tasks()
+# print("\nСписок задач:")
+# manager.print_task_list()
+
+async def main():
+    await manager.execute_all()
+
+
+asyncio.run(main())
+
 # Загрузка списка задач
 # manager.add_task(PrintList("Скачивание файла"))
 # manager.add_task(PrintList("Обработка данных"))
@@ -172,9 +181,9 @@ manager = TaskManager()
 # manager.linear_search("20fe5400-d922-4713-9504-3d1346efd996")
 
 # # Печать списка задач
-manager.load_tasks()
-print("\nСписок задач:")
-manager.print_task_list()
+# manager.load_tasks()
+# print("\nСписок задач:")
+# manager.print_task_list()
 
 # Удаление задачи по ID
 # manager.load_tasks()
@@ -185,14 +194,19 @@ manager.print_task_list()
 # manager.print_task_list()
 
 # Сортировка задач по дате добавления
-task_ids = [task.id for task in manager.queue]
-sorted_task = manager.bubble_sort(task_ids)
-sorted_tasks = sorted(manager.queue, key=lambda task: sorted_task.index(task.id))
+# task_ids = [task.id for task in manager.queue]
+# sorted_task = manager.bubble_sort(task_ids)
+# sorted_tasks = sorted(manager.queue, key=lambda task: sorted_task.index(task.id))
+#
+# print("\nОтсортированный список ID задач:")
+# for task in sorted_tasks:
+#     print(f"ID: {task.id}, Задача: {task.description} дата: {task.time}")
 
-print("\nОтсортированный список ID задач:")
-for task in sorted_tasks:
-    print(f"ID: {task.id}, Задача: {task.description} дата: {task.time}")
-#_____
+# Асинхронное выполнение списка задач
+
+
+# Использование асинхронное
+
 
 # Использование асинхронное
 # async def main():
@@ -230,89 +244,6 @@ for task in sorted_tasks:
 #     def __repr__(self):
 #         return f"<Category(id={self.id}, name={self.name})>"
 #
-# class Incharge(Base): #ответственный за выполнение
-#     __tablename__ = 'Ответственный'
-#
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String(100), nullable=False)
-#     contact_info = Column(Text)
-#
-#     # Связь с поставками
-#     shipments = relationship("Shipment", back_populates="supplier")
-#
-#     def __repr__(self):
-#         return f"<Supplier(id={self.id}, name={self.name})>"
-#
-# # Модель для таблицы товаров
-# class Product(Base):
-#     __tablename__ = 'products'
-#
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String(100), nullable=False)
-#     description = Column(Text)
-#     quantity = Column(Integer, nullable=False, default=0)
-#     category_id = Column(Integer, ForeignKey('categories.id'))
-#     price = Column(DECIMAL(10, 2), nullable=False)
-#     supplier_id = Column(Integer, ForeignKey('suppliers.id'))
-#
-#     # Связи
-#     category = relationship("Category", back_populates="products")
-#     transactions = relationship("Transaction", back_populates="product")
-#     shipment_items = relationship("ShipmentItem", back_populates="product")
-#
-#     def __repr__(self):
-#         return f"<Product(id={self.id}, name={self.name}, quantity={self.quantity}, price={self.price})>"
-
-
-# старое
-# import datetime
-# import time
-# import asyncio
-# from datetime import datetime
-# import random
-
-# class TaskManager:
-#     _instance = None  # Singleton
-
-#     def __new__(cls):
-#         if cls._instance is None:
-#             cls._instance = super().__new__(cls)
-#             cls._instance.tasks = []
-#         return cls._instance
-
-#     def add_task(self, command_func):
-#         self.tasks.append(command_func)
-
-#     def execute_all(self):
-#         for task in self.tasks:
-#             task()  # Вызов команды как функции
-#         self.tasks.clear()
-
-# # Использование
-# manager = TaskManager()
-
-# Добавляем команды как обычные функции
-
-# tasks_list = [
-#         "Скачивание файла",
-#         "Обработка данных",
-#         "Синхронизация",
-#         "Резервное копирование",
-#         "Анализ логов",
-#         "Экспорт данных",
-#         "Импорт данных",
-#         "Очистка кеша",
-#         "Обновление системы",
-#         "Мониторинг ресурсов",
-#         ]
-
-
-# for i, task_name in enumerate(tasks_list):  # Iterate through tasks with index
-#     manager.add_task(lambda task_name=task_name, i=i: print(f"Задача {i + 1}: {task_name} выполнена"))
-
-
-
-# manager.execute_all()
 
 
 # Запуск нескольких задач одновременно
@@ -344,17 +275,3 @@ for task in sorted_tasks:
 # if __name__ == "__main__":
 #     main()
 
-#_____
-
-# Task = [
-#         "Скачивание файла", 22153, "12.05.2025/13.44.24",
-#         "Обработка данных", 23556, "29.03.2025 / 10.33.08",
-#         "Синхронизация", 14576, "29.03.2025 / 11.02.00"
-#         "Резервное копирование", 54321, "26.03.2025 / 15.02.01"
-#         "Анализ логов", 98765, "30.03.2025 / 11.10.00"
-#         "Экспорт данных", 13579, "30.03.2025 / 11.15.00"
-#         "Импорт данных", 24680, "30.03.2025 / 11.06.00"
-#         "Очистка кеша", 11223, "30.03.2025 / 11.08.00"
-#         "Обновление системы", 44556, "30.03.2025 / 11.03.00"
-#         "Мониторинг ресурсов", 77889, "30.03.2025 / 11.01.00"
-#         ]
