@@ -202,68 +202,13 @@ asyncio.run(main())
 # for task in sorted_tasks:
 #     print(f"ID: {task.id}, Задача: {task.description} дата: {task.time}")
 
-# Асинхронное выполнение списка задач
-
-
-# Использование асинхронное
-
-
-# Использование асинхронное
-# async def main():
-#     semaphore = asyncio.Semaphore(3)
-#     urls = ['https://www.example.com', 'https://www.python.org', 'https://www.wikipedia.org', 'https://github.com']
-#     async with aiohttp.ClientSession() as session:
-#         tasks = [process_url(session, url, semaphore) for url in urls]
-#         results = await asyncio.gather(*tasks)
-#         await save_results("links.json", results)
-#
-# asyncio.run(main())
-
-# from sqlalchemy import (
-#     Column, Integer, String, Text, ForeignKey, DECIMAL, TIMESTAMP, CheckConstraint, create_engine
-# )
-# from sqlalchemy.orm import relationship, Session
-# from sqlalchemy.ext.declarative import declarative_base
-# from datetime import datetime
-# import warnings
-# from sqlalchemy.schema import CreateTable
-#
-#
-# warnings.filterwarnings("ignore")
-# Base = declarative_base()
-#
-# class Category(Base): #категория задачи (встреча, звонок, дело)
-#     __tablename__ = 'category'
-#
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String(50), nullable=False, unique=True)
-#
-#     # Связь с товарами
-#     products = relationship("Типы задач", back_populates="category")
-#
-#     def __repr__(self):
-#         return f"<Category(id={self.id}, name={self.name})>"
-#
-
-
 # Запуск нескольких задач одновременно
 # import asyncio
 #
 # async def task(tasks_list, delay):
 #     await asyncio.sleep(delay)
 #     print(f'Task {tasks_list} completed')
-#
-#
-# async def main():
-#     for i, task in enumerate(tasks_list):
-#         await asyncio.gather(lambda task_name=task, i=i: print(f"Задача {i + 1}: {task} выполнена"))
-#         # manager.add_task(lambda task_name=task_name, i=i: print(f"Задача {i + 1}: {task_name} выполнена"))
 
-    # await asyncio.gather(
-    #     task('A', 2),
-    #     task('B', 3),
-    #     task('C', 1)
-    # )
 
 # asyncio.run(main())
 #
